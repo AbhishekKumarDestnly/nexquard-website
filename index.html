@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NexQuard</title>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      ::-webkit-scrollbar {
+        width: 0px;
+        background: transparent; /* optional */
+      }
+      html,
+      body {
+        scrollbar-width: none; /* for Firefox */
+        -ms-overflow-style: none; /* for Internet Explorer and Edge */
+        overflow-y: scroll; /* ensures smooth scrolling still works */
+      }
+
+      /* --- Basic Static Header --- */
+      /* --- Static Glass-Effect Header --- */
+      .site-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 40px;
+        z-index: 1000;
+
+        /* Glassmorphism effect */
+        background: rgba(255, 255, 255, 0.08); /* translucent white */
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+
+        /* border-bottom: 1px solid rgba(255, 255, 255, 0.2); */
+        color: white;
+        transition: background 0.3s ease, backdrop-filter 0.3s ease;
+      }
+
+      .site-header a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .site-header a:hover {
+        color: #18b5a4;
+      }
+      /* --- Animated Header Scroll Effect --- */
+      .site-header {
+        transition: top 0.6s ease, background 0.3s ease;
+      }
+
+      .site-header.hidden {
+        top: -100px; /* moves header out of view */
+      }
+
+      .logo-area {
+        font-size: 1.6rem;
+        font-weight: 600;
+        background: linear-gradient(90deg, #18b5a4, #2979ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .nav-links a {
+        margin-left: 25px;
+        text-decoration: none;
+        color: #fff;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+      }
+
+      .nav-links a:hover {
+        color: #6dd5fa;
+      }
+
+      @media (max-width: 768px) {
+        .site-header {
+          padding: 10px 20px;
+        }
+
+        .nav-links a {
+          margin-left: 15px;
+          font-size: 0.9rem;
+        }
+      }
+
+      html,
+      body {
+        scroll-behavior: smooth;
+        height: 100%;
+        overflow-x: hidden;
+        background: #000;
+        color: white;
+        font-family: "Poppins", sans-serif;
+      }
+
+      /* --- Scroll snapping setup --- */
+      body {
+        scroll-snap-type: y mandatory;
+        overflow-y: scroll;
+      }
+
+      .section {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        scroll-snap-align: start;
+      }
+
+      /* --- Hero Section --- */
+      .hero {
+        background: linear-gradient(135deg, #000000, #0f2027, #203a43, #2c5364);
+      }
+
+      .logo {
+        width: 500px;
+        max-width: 95%;
+        opacity: 0;
+        animation: fadeIn 2s ease-in-out forwards;
+      }
+
+      /* --- Tagline Section --- */
+      .tagline-section {
+        background: linear-gradient(135deg, #000000, #111827, #1e293b);
+      }
+
+      h1 {
+        font-size: 3.5rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-align: center;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: opacity 1.5s ease, transform 1.5s ease;
+      }
+
+      h1.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .normal-text {
+        background: linear-gradient(90deg, #18b5a4, #2979ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .brand {
+        display: inline-block;
+        background: linear-gradient(270deg, #18b5a4, #2979ff, #6dd5fa, #18b5a4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 400%;
+        opacity: 0;
+        animation: glowIn 2s ease forwards 1s, shimmer 4s linear infinite 3s;
+        filter: drop-shadow(0 0 10px rgba(41, 121, 255, 0.6));
+      }
+
+      /* --- Heroes Section --- */
+      .heroes-section {
+        background: linear-gradient(135deg, #000000, #0f0f1b, #111827);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 60px 20px;
+      }
+
+      .heroes-section h2 {
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #18b5a4, #2979ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 2px;
+        margin-bottom: 60px;
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 1.5s ease, transform 1.5s ease;
+      }
+
+      .heroes-section.visible h2 {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 50px;
+        width: 90%;
+        max-width: 1000px;
+      }
+
+      .team-member {
+        text-align: center;
+        transition: transform 0.3s ease, filter 0.3s ease;
+      }
+
+      .team-member img {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid #18b5a4;
+        box-shadow: 0 0 20px rgba(24, 181, 164, 0.3);
+        transition: all 0.4s ease;
+      }
+
+      .team-member:hover img {
+        transform: scale(1.08);
+        box-shadow: 0 0 40px rgba(41, 121, 255, 0.6);
+        border-color: #2979ff;
+      }
+
+      .team-member h3 {
+        margin-top: 15px;
+        font-size: 1.3rem;
+        color: #fff;
+      }
+
+      .team-member p {
+        margin-top: 5px;
+        font-size: 1rem;
+        color: #aaa;
+      }
+
+      /* --- Businesses Section --- */
+      .business-section {
+        background: linear-gradient(135deg, #000000, #0f0f1b, #111827);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 60px 20px;
+        min-height: 100vh;
+        scroll-snap-align: start;
+        overflow: hidden; /* prevents heading bleed into previous slide */
+      }
+
+      .business-section h2 {
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #18b5a4, #2979ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 1.5s ease, transform 1.5s ease;
+      }
+
+      .business-section.visible h2 {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .business-section p {
+        max-width: 700px;
+        color: #ccc;
+        font-size: 1.1rem;
+        margin-bottom: 50px;
+      }
+
+      .product-image {
+        width: 400px;
+        max-width: 90%;
+        border-radius: 20px;
+        box-shadow: 0 0 25px rgba(41, 121, 255, 0.4);
+        transition: transform 0.5s ease;
+      }
+
+      .product-image:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 35px rgba(24, 181, 164, 0.7);
+      }
+
+      /* --- Animations --- */
+
+      @keyframes shimmer {
+        0% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 100% 50%;
+        }
+      }
+
+      @keyframes glowIn {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+          filter: drop-shadow(0 0 0 rgba(41, 121, 255, 0));
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+          filter: drop-shadow(0 0 15px rgba(41, 121, 255, 0.8));
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .logo {
+          width: 320px;
+        }
+
+        h1 {
+          font-size: 2rem;
+          padding: 0 15px;
+        }
+
+        .heroes-section h2,
+        .business-section h2 {
+          font-size: 2.2rem;
+        }
+
+        .team-member img {
+          width: 150px;
+          height: 150px;
+        }
+
+        .product-image {
+          width: 280px;
+        }
+      }
+      .business-section {
+        text-align: center;
+        scroll-snap-align: start;
+        color: white;
+        overflow: hidden;
+        min-height: 100vh;
+      }
+
+      .business-section h2 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+      }
+
+      .business-section p {
+        font-size: 1.2em;
+        color: #cccccc;
+        margin-bottom: 30px;
+      }
+
+      .business-section .product {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .business-section .product img {
+        width: 200px; /* smaller to fit fully */
+        height: auto;
+        object-fit: contain;
+        border-radius: 12px;
+        border: 2px solid #18b5a4;
+        box-shadow: 0 0 15px rgba(24, 181, 164, 0.4);
+        transform: scale(0.9);
+        transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        width: 200px;
+
+        animation: fadeInUp 2s ease forwards;
+      }
+
+      /* Remove ALL scaling on hover */
+      .business-section .product img:hover {
+        border-color: #2979ff;
+        box-shadow: 0 0 25px rgba(41, 121, 255, 0.6);
+        transform: scale(0.9); /* no zoom */
+      }
+
+      .business-section .description {
+        max-width: 600px;
+        font-size: 1em;
+        color: #aaa;
+      }
+      /* --- Business Section --- ////*/
+      .business-section {
+        background: linear-gradient(135deg, #000000, #0f0f1b, #111827);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        /* padding: 80px 20px; */
+        min-height: 100vh;
+        scroll-snap-align: start;
+        overflow: hidden;
+        box-sizing: border-box;
+        height: 100vh; /* full screen section */
+        padding-top: 30px;
+      }
+
+      /* Section Title */
+      .business-title {
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #18b5a4, #2979ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 2px;
+        margin-bottom: 40px;
+        animation: fadeInDown 1.5s ease forwards;
+      }
+
+      .business-section h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-align: center;
+        margin: 0;
+        padding-top: 80px; /* ensures no chopping at top */
+        flex-shrink: 0;
+
+        /* Gradient text effect */
+        background: linear-gradient(90deg, #18b5a4, #6dd5fa, #2979ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+
+        /* Animation */
+        opacity: 0;
+        transform: translateY(-30px);
+        animation: fadeDown 1.5s ease forwards;
+      }
+
+      .business-section.visible h2 {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .business-section .business-tagline {
+        font-size: 1.2em;
+        color: #ccc;
+        margin: 15px 0 30px 0;
+        line-height: 1.6em;
+        max-width: 700px;
+      }
+      /* Tagline */
+      .business-tagline {
+        max-width: 900px;
+        margin-bottom: 50px;
+      }
+
+      .business-section.visible .business-tagline {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .business-section .product {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .business-section .description {
+        max-width: 700px;
+        animation: fadeInUp 2s ease forwards;
+      }
+      /* --- Enhanced tagline animation --- */
+      .business-tagline {
+        font-size: 1.4em;
+        color: #ccc;
+        margin-bottom: 50px;
+        text-align: center;
+        line-height: 1.6em;
+      }
+
+      .business-tagline span {
+        display: inline-block;
+        opacity: 0;
+      }
+
+      .business-tagline .line1 {
+        animation: fadeUp 1.5s ease forwards;
+      }
+
+      .business-tagline .line2 {
+        animation: fadeUp 1.5s ease forwards 1.5s;
+      }
+
+      /* --- Destnly highlight --- */
+      .destnly {
+        background: linear-gradient(90deg, #18b5a4, #2979ff, #6dd5fa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 300%;
+        animation: shimmer 5s linear infinite;
+        font-weight: 600;
+        filter: drop-shadow(0 0 8px rgba(41, 121, 255, 0.6));
+      }
+      .destnly-heading {
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        font-size: 1.8rem;
+        font-weight: 500;
+        margin-top: 20px;
+        background: linear-gradient(90deg, #ffb347, #6133ff, #ffd580);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+      }
+      .description p {
+        color: #ddd;
+        font-family: "Poppins", sans-serif;
+        font-size: 1rem;
+        line-height: 1.7em;
+      }
+
+      /* --- NexQuard glow --- */
+      .brand-name {
+        color: #18b5a4;
+        font-weight: 500;
+        text-shadow: 0 0 8px rgba(24, 181, 164, 0.6);
+      }
+      /* Container for the typing effect */
+      .typing-container {
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        font-size: 1.4rem;
+        font-weight: 500;
+        background: linear-gradient(90deg, #ffb347, #ffcc33, #ffd580);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        white-space: nowrap;
+        overflow: hidden;
+        border-right: 2px solid rgba(255, 255, 255, 0.6);
+        animation: typing 6s steps(60, end), blink 0.75s step-end infinite;
+        width: 0;
+        margin-top: 10px;
+        display: inline-block;
+      }
+      /* Slight delay for the paragraph line */
+      .typing-container.second-line {
+        animation: typing 8s steps(90, end) 2s forwards,
+          blink 0.75s step-end infinite 2s;
+        display: block;
+        margin-top: 12px;
+        font-size: 1.2rem;
+        background: linear-gradient(90deg, #6dd5fa, #2979ff, #18b5a4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      /* Typing container */
+      .typing-text {
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        font-size: 1.2rem;
+        font-weight: 500;
+        background: linear-gradient(90deg, #6dd5fa, #2979ff, #18b5a4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        white-space: nowrap;
+        overflow: hidden;
+        border-right: 2px solid rgba(255, 255, 255, 0.6);
+        width: 0;
+        margin: 10px auto;
+        display: block;
+        animation: typing 8s steps(90, end) 0.5s forwards,
+          blink 0.75s step-end infinite 0.5s;
+        text-align: center;
+      }
+
+      /* -------------------- Footer Styling -------------------- */
+      /* --- Footer --- */
+      .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background: rgba(12, 12, 12, 0.55);
+        backdrop-filter: blur(16px) saturate(150%);
+        color: #fff;
+        padding: 30px 60px 15px;
+        z-index: 1000;
+
+        /* Animation setup */
+        transform: translateY(100%);
+        opacity: 0;
+        transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1),
+          opacity 0.8s ease;
+        pointer-events: none;
+        box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.4);
+      }
+
+      .footer.visible {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .footer-left {
+        flex: 1;
+        min-width: 250px;
+      }
+
+      .footer-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #18b5a4, #6dd5fa, #2979ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 10px;
+      }
+
+      .footer-subtitle {
+        font-style: italic;
+        color: #dcdcdc;
+        margin-bottom: 15px;
+      }
+
+      .linkedin-link {
+        display: inline-block;
+      }
+
+      .linkedin-icon {
+        width: 28px;
+        height: 28px;
+        filter: brightness(0) invert(1);
+        transition: transform 0.3s ease;
+      }
+
+      .linkedin-icon:hover {
+        transform: scale(1.15);
+      }
+
+      .footer-sections {
+        display: flex;
+        gap: 60px;
+        flex-wrap: wrap;
+      }
+
+      .footer-section h3 {
+        font-size: 1.2rem;
+        color: #6dd5fa;
+        margin-bottom: 10px;
+      }
+
+      .footer-section ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .footer-section ul li {
+        margin-bottom: 6px;
+      }
+
+      .footer-section ul li a {
+        text-decoration: none;
+        color: #dcdcdc;
+        font-size: 0.95rem;
+        transition: color 0.3s;
+      }
+
+      .footer-section ul li a:hover {
+        color: #6dd5fa;
+      }
+
+      .footer-bottom {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.85rem;
+        color: #aaa;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        padding-top: 10px;
+      }
+      /* --- Contact Section --- */
+      .contact-section {
+        background: radial-gradient(circle at top right, #0a192f, #020c1b);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        color: white;
+        text-align: center;
+        padding: 80px 20px;
+        scroll-snap-align: start;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .contact-content h2 {
+        font-size: 3rem;
+        background: linear-gradient(90deg, #18b5a4, #6dd5fa, #2979ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 2px;
+        margin-bottom: 1rem;
+        opacity: 0;
+        transform: translateY(40px);
+        animation: fadeUp 1.5s ease forwards;
+      }
+
+      .contact-tagline {
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.8);
+        max-width: 600px;
+        margin: 0 auto 2rem;
+        opacity: 0;
+        transform: translateY(40px);
+        animation: fadeUp 1.5s ease forwards 0.3s;
+      }
+
+      .contact-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+      }
+
+      .contact-box input {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 0.6rem 1rem;
+        border-radius: 25px;
+        color: white;
+        font-size: 0.9rem;
+        width: 200px;
+        text-align: center;
+        backdrop-filter: blur(6px);
+        transition: border 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .contact-box input:focus {
+        outline: none;
+        border: 1px solid #18b5a4;
+        box-shadow: 0 0 10px rgba(24, 181, 164, 0.4);
+      }
+
+      .contact-box button {
+        padding: 0.6rem 1.2rem;
+        background: linear-gradient(90deg, #00bcd4, #7c4dff);
+        border: none;
+        color: white;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        font-size: 0.9rem;
+      }
+
+      .contact-box button:hover {
+        transform: scale(1.08);
+        box-shadow: 0 0 12px rgba(124, 77, 255, 0.5);
+      }
+
+      /* subtle fade-in animation */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* --- Animations --- */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animated-tagline {
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        font-size: 2rem;
+        line-height: 1.6em;
+        font-weight: 500;
+        background: linear-gradient(90deg, #18b5a4, #2979ff, #6dd5fa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: fadeUp 2s ease forwards;
+        text-shadow: 0 0 15px rgba(24, 181, 164, 0.4);
+      }
+
+      /* Add visible shimmer overlay */
+      .animated-tagline::before {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(90deg, #18b5a4, #2979ff, #6dd5fa, #18b5a4);
+        background-size: 400%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer 7s linear infinite;
+      }
+
+      /* Reuse your animation for individual words */
+      .animated-tagline .word {
+        opacity: 0;
+        transform: translateY(30px);
+        display: inline-block;
+        color: #18b5a4; /* visible even before gradient appears */
+        animation: riseIn 0.8s ease forwards;
+      }
+
+      /* Dash */
+      .animated-tagline .dash {
+        display: inline-block;
+        opacity: 0;
+        color: #2979ff;
+        animation: fadeInDash 1.5s ease forwards 3s;
+      }
+
+      @keyframes shimmer {
+        0% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 400% 50%;
+        }
+      }
+
+      @keyframes riseIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeInDash {
+        from {
+          opacity: 0;
+          transform: scale(0.5);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      @keyframes glowPulse {
+        from {
+          text-shadow: 0 0 10px rgba(41, 121, 255, 0.7);
+        }
+        to {
+          text-shadow: 0 0 25px rgba(24, 181, 164, 0.9);
+        }
+      }
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      /* Typing animation for the section */
+      @keyframes typing {
+        from {
+          width: 0;
+        }
+        to {
+          width: 100%;
+        }
+      }
+      @keyframes blink {
+        50% {
+          border-color: transparent;
+        }
+      }
+      @keyframes fadeDown {
+        from {
+          opacity: 0;
+          transform: translateY(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="logo-area">NexQuard</div>
+      <nav class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#heroes">Heroes</a>
+        <a href="#business">Businesses</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="section hero" id="home">
+      <img src="LOGO.png" alt="NexQuard Logo" class="logo" />
+    </section>
+
+    <!-- Tagline Section -->
+    <section class="section tagline-section">
+      <h1 id="tagline">
+        <span class="normal-text">The next begins with </span>
+        <span class="brand">NexQuard.</span>
+      </h1>
+    </section>
+
+    <!-- Heroes Section -->
+    <section class="section heroes-section" id="heroes">
+      <h2>Know Our Heroes</h2>
+      <div class="team-grid">
+        <div class="team-member">
+          <img src="raghu.jpg" alt="Team Member 1" />
+          <h3>R Prajapati</h3>
+          <p>Chief Executive Officer(CEO)</p>
+        </div>
+        <div class="team-member">
+          <img src="bineet.jpg" alt="Team Member 2" />
+          <h3>B K Singh</h3>
+          <p>Product Head</p>
+        </div>
+        <div class="team-member">
+          <img src="ravi.jpg" alt="Team Member 3" />
+          <h3>R Karn</h3>
+          <p>Devops Head</p>
+        </div>
+        <div class="team-member">
+          <img src="abhishek.jpg" alt="Team Member 4" />
+          <h3>A Kumar</h3>
+          <p>Chief Marketing Officer(CMO)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Businesses Section (4th slide) -->
+    <section class="section business-section" id="business">
+      <h2 class="business-title">Know Our Businesses</h2>
+
+      <div class="business-tagline">
+        <h3
+          class="animated-tagline"
+          data-text="Defining the next era of human connection — through technology that feels human."
+        >
+          <span class="word">Defining</span>
+          <span class="word">the</span>
+          <span class="word">next</span>
+          <span class="word">era</span>
+          <span class="word">of</span>
+          <span class="word">human</span>
+          <span class="word">connection</span>
+          <span class="dash">—</span>
+          <br />
+          <span class="word">through</span>
+          <span class="word">technology</span>
+          <span class="word">that</span>
+          <span class="word">feels</span>
+          <span class="word">human.</span>
+        </h3>
+      </div>
+
+      <div class="product">
+        <img src="product_1.jpg" alt="Our Product" />
+        <div class="description">
+          <h3 class="destnly-heading">Destnly — Where Stories Begin</h3>
+
+          <!-- <p>
+            The future of meaningful connections. Destnly uses advanced matching
+            algorithms to help you discover your perfect match based on
+            compatibility, values, and shared dreams.
+          </p> -->
+          <p class="typing-container second-line" class="typing-text">
+            The future of meaningful connections. Destnly uses advanced matching
+            algorithms to help you discover your perfect match based on
+            compatibility, values, and shared dreams.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section contact-section">
+      <div class="contact-content">
+        <h2>Let’s Connect</h2>
+        <p class="contact-tagline">
+          We’re always here to collaborate and innovate — let’s shape the future
+          together.
+        </p>
+
+        <div class="contact-box">
+          <input
+            type="text"
+            id="userEmail"
+            placeholder="connect@nexquard.com"
+            readonly
+          />
+          <button id="sendMail">Send</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <!-- <footer class="footer">
+      <p>© 2025 NexQuard. All rights reserved.</p>
+    </footer> -->
+    <!-- Footer -->
+    <footer class="footer" id="footer">
+      <div class="footer-content">
+        <div class="footer-left">
+          <h2 class="footer-title">NexQuard</h2>
+          <p class="footer-subtitle">The next begins with NexQuard.</p>
+          <a href="https://linkedin.com" target="_blank" class="linkedin-link">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/174/174857.png"
+              alt="LinkedIn"
+              class="linkedin-icon"
+            />
+          </a>
+        </div>
+
+        <div class="footer-sections">
+          <div class="footer-section">
+            <h3>About</h3>
+            <ul>
+              <li><a href="#">Features</a></li>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Contact</a></li>
+              <li><a href="#">Updates</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-section">
+            <h3>Support</h3>
+            <ul>
+              <li><a href="#">Help Center</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Terms of Service</a></li>
+              <li><a href="#">Community</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">© 2025 NexQuard. All rights reserved.</div>
+    </footer>
+
+    <script>
+      const tagline = document.getElementById("tagline");
+      const heroes = document.getElementById("heroes");
+      const business = document.getElementById("business");
+      const contact = document.getElementById("contact");
+      const footer = document.querySelector(".footer");
+
+      // --- Section fade-in observer ---
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.4 }
+      );
+
+      [tagline, heroes, business, contact].forEach((section) =>
+        observer.observe(section)
+      );
+
+      // --- Footer visibility logic (active on Business and Contact sections) ---
+      const footerObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              document.addEventListener("mousemove", handleMouseMove);
+            } else {
+              document.removeEventListener("mousemove", handleMouseMove);
+              footer.classList.remove("visible");
+            }
+          });
+        },
+        { threshold: 0.7 }
+      );
+
+      footerObserver.observe(business);
+      footerObserver.observe(contact);
+
+      function handleMouseMove(e) {
+        const windowHeight = window.innerHeight;
+        const cursorY = e.clientY;
+        const footerRect = footer.getBoundingClientRect();
+
+        // Show footer when cursor near bottom or hovering over footer
+        if (cursorY > windowHeight - 100 || e.clientY >= footerRect.top) {
+          footer.classList.add("visible");
+        } else {
+          footer.classList.remove("visible");
+        }
+      }
+
+      // Keep footer visible while cursor is inside it
+      footer.addEventListener("mouseenter", () => {
+        footer.classList.add("visible");
+      });
+      footer.addEventListener("mouseleave", () => {
+        footer.classList.remove("visible");
+      });
+
+      // --- Contact Send Button ---
+      document.getElementById("sendMail").addEventListener("click", () => {
+        const email = "connect@nexquard.com"; // your email
+        const subject = encodeURIComponent("Let's Connect with NexQuard");
+        const body = encodeURIComponent(
+          "Hi Team NexQuard,\n\nI’d like to connect with you regarding..."
+        );
+
+        // Opens Gmail compose (asks login if not logged in)
+        const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}&body=${body}`;
+        window.open(gmailUrl, "_blank");
+      });
+    </script>
+
+    <!-- Scroll-triggered animations -->
+    <!-- <script>
+      const tagline = document.getElementById("tagline");
+      const heroes = document.getElementById("heroes");
+      const business = document.getElementById("business");
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.4 }
+      );
+
+      observer.observe(tagline);
+      observer.observe(heroes);
+      observer.observe(business);
+    </script> -->
+
+    <!-- <script>
+      (function () {
+        /* ---------- config ---------- */
+        const HEADER_SELECTOR = ".site-header";
+        const IGNORE_DELTA = 6;
+
+        /* ---------- helper UI ---------- */
+        function createDebugPanel() {
+          const panel = document.createElement("div");
+          panel.id = "header-debug-panel";
+          Object.assign(panel.style, {
+            position: "fixed",
+            right: "12px",
+            top: "12px",
+            width: "320px",
+            background: "rgba(0,0,0,0.75)",
+            color: "#fff",
+            fontSize: "13px",
+            zIndex: 99999,
+            padding: "10px",
+            borderRadius: "8px",
+            fontFamily: "system-ui,Segoe UI,Roboto,Arial",
+            lineHeight: "1.25",
+            boxShadow: "0 6px 30px rgba(0,0,0,0.6)",
+          });
+
+          panel.innerHTML = `
+      <strong>Header Debug</strong>
+      <div id="hd-status" style="margin-top:8px">initializing…</div>
+      <div style="margin-top:8px">
+        <button id="hd-show" style="margin-right:6px">Force show</button>
+        <button id="hd-hide">Force hide</button>
+      </div>
+      <pre id="hd-data" style="margin-top:8px;white-space:pre-wrap"></pre>
+      <div style="margin-top:6px;color:#ddd;font-size:12px">Open console for more logs.</div>
+    `;
+          document.body.appendChild(panel);
+
+          document.getElementById("hd-show").addEventListener("click", () => {
+            try {
+              header.classList.remove("hidden");
+              header.classList.add("visible");
+            } catch (e) {}
+            logToPanel();
+            console.log("[HD] force show");
+          });
+          document.getElementById("hd-hide").addEventListener("click", () => {
+            try {
+              header.classList.add("hidden");
+              header.classList.remove("visible");
+            } catch (e) {}
+            logToPanel();
+            console.log("[HD] force hide");
+          });
+        }
+
+        function logToPanel() {
+          const el = document.getElementById("hd-data");
+          if (!el) return;
+          const comp = header ? getComputedStyle(header) : null;
+          const cls = header ? Array.from(header.classList).join(" ") : "—";
+          const transform = comp ? comp.transform : "—";
+          const top = header
+            ? header.getBoundingClientRect().top.toFixed(1)
+            : "—";
+          const h = header ? header.offsetHeight : "—";
+          el.textContent = [
+            `scrollY: ${Math.round(window.scrollY)}`,
+            `lastScrollY: ${lastScrollY}`,
+            `header present: ${!!header}`,
+            `header classes: ${cls}`,
+            `computed transform: ${transform}`,
+            `header rect.top: ${top}px`,
+            `header height: ${h}px`,
+            `pointerEvents: ${comp ? comp.pointerEvents : "—"}`,
+          ].join("\n");
+        }
+
+        /* ---------- find header ---------- */
+        const header = document.querySelector(HEADER_SELECTOR);
+        createDebugPanel();
+        const statusEl = document.getElementById("hd-status");
+
+        if (!header) {
+          statusEl.innerHTML = `<span style="color:#ff6b6b">NO element matching "${HEADER_SELECTOR}" found.</span>`;
+          console.error("[HD] No header found with selector", HEADER_SELECTOR);
+          return;
+        }
+
+        statusEl.innerHTML = `<span style="color:#7ee787">Header found</span> — watching events`;
+
+        /* ---------- log current CSS computed values ---------- */
+        function printComputed() {
+          const cs = getComputedStyle(header);
+          console.log("[HD] computed style for header:", {
+            transform: cs.transform,
+            transition: cs.transition,
+            top: cs.top,
+            position: cs.position,
+            opacity: cs.opacity,
+            pointerEvents: cs.pointerEvents,
+          });
+        }
+        printComputed();
+
+        /* ---------- observe attribute / class changes ---------- */
+        const mo = new MutationObserver((mutations) => {
+          mutations.forEach((m) => {
+            if (m.type === "attributes") {
+              console.log(
+                "[HD] MutationObserver: attribute changed:",
+                m.attributeName,
+                "new classList=",
+                header.className
+              );
+              document.getElementById(
+                "hd-status"
+              ).textContent = `class changed: ${header.className}`;
+              logToPanel();
+            }
+          });
+        });
+        mo.observe(header, {
+          attributes: true,
+          attributeFilter: ["class", "style"],
+        });
+
+        /* ---------- wrapper to detect other code calling classList.add/remove (best-effort) ---------- */
+        try {
+          const origAdd = DOMTokenList.prototype.add;
+          const origRemove = DOMTokenList.prototype.remove;
+
+          DOMTokenList.prototype.add = function (...args) {
+            const name =
+              this === header.classList
+                ? "[header.classList].add"
+                : "classList.add";
+            console.log(`[HD] classList.add called (${name}) with`, args);
+            const res = origAdd.apply(this, args);
+            logToPanel();
+            return res;
+          };
+          DOMTokenList.prototype.remove = function (...args) {
+            const name =
+              this === header.classList
+                ? "[header.classList].remove"
+                : "classList.remove";
+            console.log(`[HD] classList.remove called (${name}) with`, args);
+            const res = origRemove.apply(this, args);
+            logToPanel();
+            return res;
+          };
+        } catch (e) {
+          console.warn("[HD] unable to wrap DOMTokenList methods", e);
+        }
+
+        /* ---------- main scroll diagnostic ---------- */
+        let lastScrollY = window.scrollY || 0;
+        let ticking = false;
+
+        function onScroll() {
+          const current = window.scrollY || 0;
+          const diff = Math.abs(current - lastScrollY);
+          console.log(
+            `[HD] scroll event: current=${Math.round(
+              current
+            )} last=${Math.round(lastScrollY)} diff=${Math.round(diff)}`
+          );
+          // small jitter ignored
+          if (diff < IGNORE_DELTA) {
+            logToPanel();
+            lastScrollY = current;
+            return;
+          }
+
+          if (current <= 80) {
+            // near top -> expected visible
+            console.log("[HD] decision: near top -> show header");
+            header.classList.remove("hidden");
+            header.classList.add("visible");
+          } else if (current > lastScrollY) {
+            // scrolling down -> hide
+            console.log("[HD] decision: scrolling down -> hide header");
+            header.classList.add("hidden");
+            header.classList.remove("visible");
+          } else {
+            // scrolling up -> show
+            console.log("[HD] decision: scrolling up -> show header");
+            header.classList.remove("hidden");
+            header.classList.add("visible");
+          }
+
+          lastScrollY = current <= 0 ? 0 : current;
+          logToPanel();
+        }
+
+        window.addEventListener(
+          "scroll",
+          () => {
+            if (!ticking) {
+              window.requestAnimationFrame(onScroll);
+              ticking = true;
+              // small delay to reset ticking
+              setTimeout(() => {
+                ticking = false;
+              }, 60);
+            }
+          },
+          { passive: true }
+        );
+
+        /* ---------- pointer & touch debug ---------- */
+        window.addEventListener("mousemove", (e) => {
+          if (e.clientY < 60) {
+            // when mouse near top we expect header visible
+            console.log("[HD] mousemove near top -> forcing show");
+            header.classList.remove("hidden");
+            header.classList.add("visible");
+            logToPanel();
+          }
+        });
+
+        window.addEventListener(
+          "touchstart",
+          () => {
+            console.log("[HD] touchstart -> forcing show");
+            header.classList.remove("hidden");
+            header.classList.add("visible");
+            logToPanel();
+          },
+          { passive: true }
+        );
+
+        /* ---------- initial state report ---------- */
+        console.log("[HD] Debug script injected. Initial header:", header);
+        logToPanel();
+      })();
+    </script> -->
+  </body>
+</html>
