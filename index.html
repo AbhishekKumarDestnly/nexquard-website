@@ -334,6 +334,19 @@
           width: 320px;
         }
 
+        /* FIX section overlap on mobile */
+.section {
+  height: auto;          /* allow content to expand */
+  min-height: 100vh;     /* still fill screen */
+  padding-bottom: 60px; /* breathing space between sections */
+}
+
+/* Extra safety spacing between Heroes and Business */
+.heroes-section {
+  padding-bottom: 80px;
+}
+
+
         h1 {
           font-size: 2rem;
           padding: 0 15px;
@@ -934,6 +947,78 @@
           transform: translateY(0);
         }
       }
+
+            /* ================= Services Section ================= */
+
+      .services-section {
+        background: radial-gradient(
+            circle at center,
+            rgba(41, 121, 255, 0.15),
+            transparent 60%
+          ),
+          linear-gradient(135deg, #000000, #0b132b, #020c1b);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .services-content {
+        max-width: 900px;
+        padding: 0 20px;
+      }
+
+      .services-title {
+        font-size: 4.2rem;
+        font-weight: 600;
+        margin-bottom: 40px;
+
+        background: linear-gradient(90deg, #18b5a4, #2979ff, #6dd5fa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+
+        letter-spacing: 1px;
+        animation: fadeUp 1.5s ease forwards;
+      }
+
+      .services-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .services-list li {
+        font-size: 2.3rem;
+        color: rgba(255, 255, 255, 0.85);
+        margin-bottom: 18px;
+        line-height: 1.6;
+
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeUp 1.2s ease forwards;
+      }
+
+      /* Staggered animation */
+      .services-list li:nth-child(1) { animation-delay: 0.2s; }
+      .services-list li:nth-child(2) { animation-delay: 0.4s; }
+      .services-list li:nth-child(3) { animation-delay: 0.6s; }
+      .services-list li:nth-child(4) { animation-delay: 0.8s; }
+      .services-list li:nth-child(5) { animation-delay: 1s; }
+      .services-list li:nth-child(6) { animation-delay: 1.2s; }
+
+      /* Mobile optimization */
+      @media (max-width: 768px) {
+        .services-title {
+          font-size: 2.3rem;
+          margin-bottom: 30px;
+        }
+
+        .services-list li {
+          font-size: 1.1rem;
+          margin-bottom: 14px;
+        }
+      }
+
     </style>
   </head>
   <body>
@@ -959,6 +1044,23 @@
         <span class="brand">NexQuard.</span>
       </h1>
     </section>
+
+        <!-- Services Section -->
+    <section class="section services-section" id="services">
+      <div class="services-content">
+        <h2 class="services-title">Services We Provide</h2>
+
+        <ul class="services-list">
+          <li>Product Design & User Experience (UX/UI)</li>
+          <li>Web & Mobile Application Development</li>
+          <li>AI-Driven Matchmaking & Recommendation Systems</li>
+          <li>Cloud Infrastructure & DevOps Solutions</li>
+          <li>Scalable Backend & API Development</li>
+          <li>Growth Strategy & Digital Branding</li>
+        </ul>
+      </div>
+    </section>
+
 
     <!-- Heroes Section -->
     <section class="section heroes-section" id="heroes">
@@ -1171,6 +1273,27 @@
         const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}&body=${body}`;
         window.open(gmailUrl, "_blank");
       });
+
+              /* ================= HEADER VISIBILITY (SCROLL SNAP SAFE) ================= */
+
+        const header = document.querySelector(".site-header");
+        const heroSection = document.querySelector("#home");
+
+        const headerObserver = new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting) {
+              header.classList.remove("hidden"); // show at top (hero visible)
+            } else {
+              header.classList.add("hidden"); // hide when leaving top
+            }
+          },
+          {
+            threshold: 0.8, // hero mostly visible
+          }
+        );
+
+headerObserver.observe(heroSection);
+
     </script>
 
     <!-- Scroll-triggered animations -->
